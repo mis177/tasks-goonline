@@ -25,10 +25,11 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
       : "";
 
   TextEditingController taskPriorityTextController = TextEditingController();
-  taskPriorityTextController.text = isOldTask ? task.priority.toString() : "";
+  taskPriorityTextController.text = isOldTask ? task.priority.toString() : "5";
 
   TextEditingController taskStatusTextController = TextEditingController();
-  taskStatusTextController.text = isOldTask ? task.status.toString() : "";
+  taskStatusTextController.text =
+      isOldTask ? task.status.toString() : taskStatus[0];
 
   TextEditingController taskOwnerTextController = TextEditingController();
   taskOwnerTextController.text = isOldTask ? task.owner : "";
@@ -203,6 +204,12 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                               int? taskPriority =
                                   int.tryParse(taskPriorityTextController.text);
                               taskPriority ??= 5;
+                              int doneDate = 0;
+                              if (taskStatusTextController.text ==
+                                  taskStatus[2]) {
+                                doneDate =
+                                    DateTime.now().millisecondsSinceEpoch;
+                              }
                               if (isOldTask) {
                                 context.read<TaskServiceBloc>().add(
                                       TaskServiceTaskUpdateRequested(
@@ -214,7 +221,7 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                                                     .text,
                                             deadline: deadlineDate!
                                                 .millisecondsSinceEpoch,
-                                            doneDate: 0,
+                                            doneDate: doneDate,
                                             priority: taskPriority,
                                             owner: taskOwnerTextController.text,
                                             status:

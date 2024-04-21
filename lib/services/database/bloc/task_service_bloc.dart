@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_goonline/models/task_model.dart';
+import 'package:notes_goonline/models/tasks_stats_model.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_event.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_state.dart';
 import 'package:notes_goonline/services/database/task_service.dart';
@@ -78,6 +79,24 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
           exception = e;
         }
         emit(TripServiceTripsLoaded(tasks: tasks, exception: exception));
+      },
+    );
+
+    on<TaskServiceStatsRequested>(
+      (event, emit) async {
+        emit(const TaskServiceLoading());
+        Exception? exception;
+        TasksStats tasksStats = TasksStats.empty();
+        try {
+          List<Task> tasks = await service.getTasks();
+          tasksStats = TasksStats.fromTasksList(tasks);
+        } on Exception catch (e) {
+          exception = e;
+        }
+        emit(TripServiceStatsLoaded(
+          tasksStats: tasksStats,
+          exception: exception,
+        ));
       },
     );
   }

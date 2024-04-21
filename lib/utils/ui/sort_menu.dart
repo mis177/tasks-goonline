@@ -56,8 +56,9 @@ List<PopupMenuItem<Widget>> getSortingOptions(BuildContext context,
   List<PopupMenuItem<Widget>> optionsList = [];
 
   for (var option in sortOptions) {
-    Icon sortIcon =
-        option.isAscending == true ? Icon(Icons.north) : Icon(Icons.south);
+    Icon sortIcon = option.isAscending == true
+        ? const Icon(Icons.north)
+        : const Icon(Icons.south);
 
     optionsList.add(PopupMenuItem(
       child: GestureDetector(

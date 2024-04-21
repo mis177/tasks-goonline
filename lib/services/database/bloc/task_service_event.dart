@@ -46,3 +46,13 @@ class TaskServiceTaskSortRequested extends TaskServiceEvent {
   @override
   List<Object?> get props => [columnName];
 }
+
+class TaskServiceStatsRequested extends TaskServiceEvent {
+  final List<Task> tasks;
+
+  const TaskServiceStatsRequested({
+    required this.tasks,
+  });
+  @override
+  List<Object?> get props => [tasks];
+}

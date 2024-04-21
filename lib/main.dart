@@ -6,6 +6,8 @@ import 'package:notes_goonline/pages/tasks_page.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_bloc.dart';
 import 'package:notes_goonline/services/database/repositories/task_database_repository.dart';
 import 'package:notes_goonline/services/database/task_service.dart';
+import 'package:notes_goonline/services/weather_api/bloc/weather_bloc.dart';
+import 'package:notes_goonline/services/weather_api/dio_weather_client.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,14 +19,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: BlocProvider(
-        create: (context) =>
-            TaskServiceBloc(TaskService(repository: TaskDatabaseRepository())),
-        child: const TasksListPage(),
-      ),
+      home: const TasksPage(),
       routes: {
         tasksListRoute: (context) => const TasksPage(),
-        tasksStatsRoute: (context) => const StatsPage()
+        tasksStatsRoute: (context) => const StatsPageProvider()
       },
     );
   }

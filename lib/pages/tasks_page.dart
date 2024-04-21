@@ -9,6 +9,7 @@ import 'package:notes_goonline/services/weather_api/bloc/weather_bloc.dart';
 import 'package:notes_goonline/services/weather_api/bloc/weather_event.dart';
 import 'package:notes_goonline/services/weather_api/bloc/weather_state.dart';
 import 'package:notes_goonline/services/weather_api/dio_weather_client.dart';
+import 'package:notes_goonline/services/weather_api/weather_exceptions.dart';
 import 'package:notes_goonline/utils/ui/custom_drawer.dart';
 import 'package:notes_goonline/utils/ui/edit_task_dialog.dart';
 import 'package:notes_goonline/utils/ui/error_dialog.dart';
@@ -54,6 +55,7 @@ class _TasksListPageState extends State<TasksListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         centerTitle: true,
         actions: [
           Row(
@@ -65,13 +67,13 @@ class _TasksListPageState extends State<TasksListPage> {
                   },
                   icon: const Icon(
                     Icons.add,
-                    size: 32,
                   ))
             ],
           )
         ],
         title: const Text("TASKS LIST"),
       ),
+      backgroundColor: Theme.of(context).colorScheme.background,
       drawer: const CustomDrawer(),
       // pull screen to refresh weather
       body: RefreshIndicator(
@@ -82,7 +84,13 @@ class _TasksListPageState extends State<TasksListPage> {
           children: [
             BlocConsumer<WeatherBloc, WeatherState>(
               listener: (context, state) async {
-                if (state.exception != null) {
+                if (state.exception != null &&
+                    state.exception is WeatherPermissionDenied) {
+                  await showErrorDialog(
+                      context: context,
+                      content:
+                          "Weather API Error! \n\nDenied permissions to access the device's location.");
+                } else if (state.exception != null) {
                   await showErrorDialog(
                       context: context,
                       content:
@@ -94,6 +102,17 @@ class _TasksListPageState extends State<TasksListPage> {
                   context.read<WeatherBloc>().add(
                         const WeatherRequested(),
                       );
+                } else if (state.exception is WeatherPermissionDenied) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 50, right: 50, top: 20),
+                      child: Text(
+                        "Denied permissions to access the device's location.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  );
                 } else if (state is WeatherLoaded) {
                   return WeatherWidget(weather: state.weather!);
                 }
@@ -102,6 +121,7 @@ class _TasksListPageState extends State<TasksListPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Loaduing weather..."),
+                    SizedBox(height: 12),
                     CircularProgressIndicator(),
                   ],
                 );
@@ -127,7 +147,8 @@ class _TasksListPageState extends State<TasksListPage> {
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         children: [
-                          Text("SSS"),
+                          // TODO filtering with buttons by task status (all, done, executing), button to delete all tasks
+                          const SizedBox(height: 30),
                           Expanded(
                             child: GridView.count(
                                 crossAxisCount: 2,

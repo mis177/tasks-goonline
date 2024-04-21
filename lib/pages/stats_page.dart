@@ -33,7 +33,12 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: const Text("TASKS STATS"),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.background,
       drawer: const CustomDrawer(),
       body: BlocConsumer<TaskServiceBloc, TaskServiceState>(
         listener: (context, state) async {

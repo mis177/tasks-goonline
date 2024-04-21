@@ -19,7 +19,10 @@ Future<bool?> showConfirmationDialog({
             onPressed: () {
               Navigator.of(context).pop(false);
             },
-            child: const Text('No'),
+            child: Text(
+              'No',
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
           ),
           TextButton(
             style: TextButton.styleFrom(
@@ -28,7 +31,10 @@ Future<bool?> showConfirmationDialog({
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: const Text('Yes'),
+            child: Text(
+              'Yes',
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
           ),
         ],
       );

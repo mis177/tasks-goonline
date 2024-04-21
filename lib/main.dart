@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_goonline/const/routes.dart';
 import 'package:notes_goonline/pages/stats_page.dart';
 import 'package:notes_goonline/pages/tasks_page.dart';
-import 'package:notes_goonline/services/database/bloc/task_service_bloc.dart';
-import 'package:notes_goonline/services/database/repositories/task_database_repository.dart';
-import 'package:notes_goonline/services/database/task_service.dart';
-import 'package:notes_goonline/services/weather_api/bloc/weather_bloc.dart';
-import 'package:notes_goonline/services/weather_api/dio_weather_client.dart';
+
+import 'package:notes_goonline/theme/theme.dart';
 
 void main() {
   runApp(const MainApp());
@@ -20,6 +16,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const TasksPage(),
+      theme: lightMode,
       routes: {
         tasksListRoute: (context) => const TasksPage(),
         tasksStatsRoute: (context) => const StatsPageProvider()

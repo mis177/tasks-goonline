@@ -39,13 +39,17 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
       builder: (_) => BlocProvider.value(
             value: BlocProvider.of<TaskServiceBloc>(context),
             child: AlertDialog(
+              backgroundColor: Theme.of(context).colorScheme.background,
               title: Center(
                 child: Text(
                   isOldTask ? "Edit task" : "New task",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              icon: const Icon(Icons.note),
+              icon: Icon(
+                Icons.note,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -56,10 +60,14 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
                     TextField(
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
                       controller: taskNameTextController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.title),
-                        border: OutlineInputBorder(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.secondary,
+                        prefixIcon: const Icon(Icons.title),
+                        border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(12))),
                         hintText: "Name",
@@ -70,10 +78,14 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     TextField(
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
                       controller: taskDescriptionTextController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.draw),
-                        border: OutlineInputBorder(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.secondary,
+                        prefixIcon: const Icon(Icons.draw),
+                        border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(12))),
                         hintText: "Description",
@@ -86,38 +98,48 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                     const SizedBox(height: 4),
                     Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Flexible(
-                            child: TextField(
-                              controller: taskDeadlineTextController,
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none),
-                              textAlign: TextAlign.center,
-                              enabled: false,
+                          color: Theme.of(context).colorScheme.secondary,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                              child: TextField(
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                                controller: taskDeadlineTextController,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    border: InputBorder.none),
+                                textAlign: TextAlign.center,
+                                enabled: false,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              deadlineDate = await showDatePicker(
-                                  context: context,
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime.now()
-                                      .add(const Duration(days: 365)));
+                            IconButton(
+                              onPressed: () async {
+                                deadlineDate = await showDatePicker(
+                                    context: context,
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime.now()
+                                        .add(const Duration(days: 365)));
 
-                              if (context.mounted && deadlineDate != null) {
-                                taskDeadlineTextController.text =
-                                    DateFormat('yyyy-MM-dd')
-                                        .format(deadlineDate!)
-                                        .toString();
-                              }
-                            },
-                            icon: const Icon(Icons.calendar_month),
-                          )
-                        ],
+                                if (context.mounted && deadlineDate != null) {
+                                  taskDeadlineTextController.text =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(deadlineDate!)
+                                          .toString();
+                                }
+                              },
+                              icon: const Icon(Icons.calendar_month),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -126,6 +148,12 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
                     DropdownMenu(
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                        inputDecorationTheme: InputDecorationTheme(
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.secondary,
+                            border: const OutlineInputBorder()),
                         controller: taskPriorityTextController,
                         hintText: "Priority",
                         initialSelection: taskPriorityTextController.text,
@@ -136,9 +164,17 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                     const SizedBox(height: 12),
                     const Text("Task status",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
                     const SizedBox(height: 4),
                     DropdownMenu(
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                        inputDecorationTheme: InputDecorationTheme(
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.secondary,
+                            border: const OutlineInputBorder()),
                         controller: taskStatusTextController,
                         hintText: "Status",
                         initialSelection: taskStatusTextController.text,
@@ -152,13 +188,17 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
                     TextField(
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
                       controller: taskOwnerTextController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.secondary,
+                        prefixIcon: const Icon(Icons.person),
+                        border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(12))),
-                        label: Text("Owner"),
+                        label: const Text("Owner"),
                       ),
                     )
                   ],
@@ -191,7 +231,11 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text('CANCEL'),
+                          child: Text(
+                            'CANCEL',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
@@ -251,7 +295,11 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                               Navigator.of(context).pop();
                             }
                           },
-                          child: const Text('OK'),
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
                         ),
                       ],
                     ),

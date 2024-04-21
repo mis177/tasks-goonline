@@ -16,7 +16,7 @@ class TaskTile extends StatelessWidget {
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.red,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,8 +35,9 @@ class TaskTile extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.yellow),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.background),
                   child: Text(task.priority.toString()),
                 ),
               ],
@@ -45,7 +46,10 @@ class TaskTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Deadline"),
+                const Text(
+                  "Deadline",
+                  style: TextStyle(color: Colors.red),
+                ),
                 Text(DateFormat('yyyy-MM-dd')
                     .format(DateTime.fromMillisecondsSinceEpoch(task.deadline))
                     .toString()),

@@ -46,7 +46,7 @@ class _SortMenuState extends State<SortMenu> {
         child: PopupMenuButton(
           itemBuilder: (BuildContext context) =>
               getSortingOptions(context, widget.blocContext, sortOptions),
-          child: const Icon(Icons.sort, size: 32),
+          child: const Icon(Icons.sort),
         ));
   }
 }
@@ -63,7 +63,9 @@ List<PopupMenuItem<Widget>> getSortingOptions(BuildContext context,
     optionsList.add(PopupMenuItem(
       child: GestureDetector(
         child: Container(
-          color: (option.clicked == true ? Colors.grey : Colors.white),
+          color: (option.clicked == true
+              ? Theme.of(context).colorScheme.secondary
+              : Colors.transparent),
           child: Row(
             children: [
               Expanded(
@@ -98,68 +100,6 @@ List<PopupMenuItem<Widget>> getSortingOptions(BuildContext context,
       ),
     ));
   }
-
-  // sortOptions.forEach((key, value) {
-  //   optionsList.add(PopupMenuItem(
-  //     child: GestureDetector(
-  //       child: Row(
-  //         children: [
-  //           Expanded(
-  //               flex: 1,
-  //               child: Row(
-  //                 children: [Text(key), Icon(Icons.desktop_access_disabled)],
-  //               )),
-  //           Expanded(
-  //               flex: 1,
-  //               child: Icon(value == true
-  //                   ? Icons.radio_button_checked
-  //                   : Icons.radio_button_unchecked)),
-  //         ],
-  //       ),
-  //       onTap: () {
-  //         sortOptions.forEach((key, value) {
-  //           sortOptions[key] = false;
-  //         });
-  //         sortOptions[key] = true;
-  //         blocContext
-  //             .read<TaskServiceBloc>()
-  //             .add(TaskServiceTaskSortRequested(columnName: key));
-  //         Navigator.of(context).pop();
-  //       },
-  //     ),
-  //   ));
-  // });
-
-  // sortOptions.forEach((key, value) {
-  //   optionsList.add(PopupMenuItem(
-  //     child: GestureDetector(
-  //       child: Row(
-  //         children: [
-  //           Expanded(
-  //               flex: 1,
-  //               child: Row(
-  //                 children: [Text(key), Icon(Icons.desktop_access_disabled)],
-  //               )),
-  //           Expanded(
-  //               flex: 1,
-  //               child: Icon(value == true
-  //                   ? Icons.radio_button_checked
-  //                   : Icons.radio_button_unchecked)),
-  //         ],
-  //       ),
-  //       onTap: () {
-  //         sortOptions.forEach((key, value) {
-  //           sortOptions[key] = false;
-  //         });
-  //         sortOptions[key] = true;
-  //         blocContext
-  //             .read<TaskServiceBloc>()
-  //             .add(TaskServiceTaskSortRequested(columnName: key));
-  //         Navigator.of(context).pop();
-  //       },
-  //     ),
-  //   ));
-  // });
 
   return optionsList;
 }

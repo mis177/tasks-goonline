@@ -1,0 +1,1 @@
+class WeatherPermissionDenied implements Exception {}

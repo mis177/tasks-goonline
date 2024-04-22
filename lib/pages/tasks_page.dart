@@ -120,7 +120,7 @@ class _TasksListPageState extends State<TasksListPage> {
                 return const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Loaduing weather..."),
+                    Text("Loading weather..."),
                     SizedBox(height: 12),
                     CircularProgressIndicator(),
                   ],

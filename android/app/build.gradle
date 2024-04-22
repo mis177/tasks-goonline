@@ -26,7 +26,7 @@ android {
     namespace "com.example.notes_goonline"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
-
+compileSdkVersion 34
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -42,13 +42,15 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.notes_goonline"
-        // You can update the following values to match your application needs.
+                minSdkVersion flutter.minSdkVersion         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        
+              minSdkVersion flutter.minSdkVersion // Set the minimum Android SDK version
+    targetSdkVersion 30 // Set the target Android SDK version
+    multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+   
     }
 
     buildTypes {

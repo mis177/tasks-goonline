@@ -19,8 +19,13 @@ class TaskServiceTaskAddRequested extends TaskServiceEvent {
 
 class TaskServiceTaskUpdateRequested extends TaskServiceEvent {
   final Task task;
+  final bool isDeadlineChanged;
+  final bool isStatusChanged;
 
-  const TaskServiceTaskUpdateRequested({required this.task});
+  const TaskServiceTaskUpdateRequested(
+      {required this.task,
+      required this.isDeadlineChanged,
+      required this.isStatusChanged});
   @override
   List<Object?> get props => [task];
 }

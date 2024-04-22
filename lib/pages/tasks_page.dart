@@ -105,7 +105,7 @@ class _TasksListPageState extends State<TasksListPage> {
                 } else if (state.exception is WeatherPermissionDenied) {
                   return const Center(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 50, right: 50, top: 20),
+                      padding: EdgeInsets.only(left: 50, right: 50, top: 10),
                       child: Text(
                         "Denied permissions to access the device's location.",
                         textAlign: TextAlign.center,
@@ -147,7 +147,7 @@ class _TasksListPageState extends State<TasksListPage> {
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         children: [
-                          // TODO filtering with buttons by task status (all, done, executing), button to delete all tasks
+                          // TODO filtering with buttons by task status (all, done, executing)
                           const SizedBox(height: 30),
                           Expanded(
                             child: GridView.count(

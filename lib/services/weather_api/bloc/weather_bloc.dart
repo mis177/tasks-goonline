@@ -23,7 +23,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       } on Exception catch (e) {
         exception = e;
       }
-
       emit(WeatherLoaded(weather: currentWeather, exception: exception));
     });
   }

@@ -125,6 +125,10 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                               onPressed: () async {
                                 deadlineDate = await showDatePicker(
                                     context: context,
+                                    initialDate: task?.deadline == null
+                                        ? DateTime.now()
+                                        : DateTime.fromMillisecondsSinceEpoch(
+                                            task!.deadline),
                                     firstDate: DateTime.now(),
                                     lastDate: DateTime.now()
                                         .add(const Duration(days: 365)));

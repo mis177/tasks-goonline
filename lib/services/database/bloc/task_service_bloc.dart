@@ -37,16 +37,19 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
           // if task has status planned or executing
           if (event.task.status == taskStatus[0] ||
               event.task.status == taskStatus[1]) {
-            TZDateTime notificationTime = computeNotificationTime(
+            TZDateTime? notificationTime = computeNotificationTime(
                 task: event.task,
                 timeBeforeDeadline: const Duration(hours: 12));
 
-            NotificationsService.scheduledNotification(
-              id: (event.task.id / 1000).floor(),
-              title: event.task.name,
-              body: '${event.task.owner} - You have 12 hours before deadline!',
-              notificationTime: notificationTime,
-            );
+            if (notificationTime != null) {
+              NotificationsService.scheduledNotification(
+                id: (event.task.id / 1000).floor(),
+                title: event.task.name,
+                body:
+                    '${event.task.owner} - You have 12 hours before deadline!',
+                notificationTime: notificationTime,
+              );
+            }
           }
 
           tasks = await service.getTasks();
@@ -71,16 +74,19 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
             NotificationsService.cancelNotification(
                 (event.task.id / 1000).floor());
 
-            TZDateTime notificationTime = computeNotificationTime(
+            TZDateTime? notificationTime = computeNotificationTime(
                 task: event.task,
                 timeBeforeDeadline: const Duration(hours: 12));
+            if (notificationTime != null) {
+              NotificationsService.scheduledNotification(
+                id: (event.task.id / 1000).floor(),
+                title: event.task.name,
+                body:
+                    '${event.task.owner} - You have 12 hours before deadline!',
+                notificationTime: notificationTime,
+              );
+            }
 
-            NotificationsService.scheduledNotification(
-              id: (event.task.id / 1000).floor(),
-              title: event.task.name,
-              body: '${event.task.owner} - You have 12 hours before deadline!',
-              notificationTime: notificationTime,
-            );
             // task status changed to done, cancelNotification
           } else if (event.isStatusChanged &&
               event.task.status == taskStatus[2]) {
@@ -89,16 +95,18 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
             // status changed from done, schedule notification
           } else if (event.isStatusChanged &&
               event.task.status != taskStatus[2]) {
-            TZDateTime notificationTime = computeNotificationTime(
+            TZDateTime? notificationTime = computeNotificationTime(
                 task: event.task,
                 timeBeforeDeadline: const Duration(hours: 12));
-
-            NotificationsService.scheduledNotification(
-              id: (event.task.id / 1000).floor(),
-              title: event.task.name,
-              body: '${event.task.owner} - You have 12 hours before deadline!',
-              notificationTime: notificationTime,
-            );
+            if (notificationTime != null) {
+              NotificationsService.scheduledNotification(
+                id: (event.task.id / 1000).floor(),
+                title: event.task.name,
+                body:
+                    '${event.task.owner} - You have 12 hours before deadline!',
+                notificationTime: notificationTime,
+              );
+            }
           }
           tasks = await service.getTasks();
         } on Exception catch (e) {

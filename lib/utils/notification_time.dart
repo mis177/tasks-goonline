@@ -1,7 +1,7 @@
 import 'package:notes_goonline/models/task_model.dart';
 import 'package:timezone/timezone.dart';
 
-TZDateTime computeNotificationTime({
+TZDateTime? computeNotificationTime({
   required Task task,
   required Duration timeBeforeDeadline,
 }) {
@@ -20,15 +20,21 @@ TZDateTime computeNotificationTime({
   DateTime correctedNotificationDateTime =
       notificationDateTime.subtract(difference);
 
-  //int notificationId = event.id
-  TZDateTime notificationTime = TZDateTime(
-    local,
-    correctedNotificationDateTime.year,
-    correctedNotificationDateTime.month,
-    correctedNotificationDateTime.day,
-    correctedNotificationDateTime.hour,
-    correctedNotificationDateTime.minute,
-  );
+  bool isAfterNotificationTime =
+      notificationDateTime.difference(nowDate).inMilliseconds > 0;
+  TZDateTime? notificationTime;
+  if (isAfterNotificationTime) {
+    notificationTime = TZDateTime(
+      local,
+      correctedNotificationDateTime.year,
+      correctedNotificationDateTime.month,
+      correctedNotificationDateTime.day,
+      correctedNotificationDateTime.hour,
+      correctedNotificationDateTime.minute,
+    );
+  } else {
+    notificationTime = null;
+  }
 
   return notificationTime;
 }

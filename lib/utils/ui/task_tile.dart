@@ -30,7 +30,7 @@ class TaskTile extends StatelessWidget {
                   child: Text(
                     task.name,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 22),
+                        fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
                 Container(
@@ -42,7 +42,14 @@ class TaskTile extends StatelessWidget {
                 ),
               ],
             ),
-            Text(task.description),
+            Expanded(
+              flex: 2,
+              child: Text(
+                task.description,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

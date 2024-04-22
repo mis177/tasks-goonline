@@ -38,9 +38,9 @@ Stats page:
 
 Notifications:
 
-![obraz](https://github.com/mis177/tasks-goonline/assets/56123042/78029037-eb28-405b-baa1-cc426df8e997)
+![obraz](https://github.com/mis177/tasks-goonline/assets/56123042/78029037-eb28-405b-baa1-cc426df8e997) ![obraz](https://github.com/mis177/tasks-goonline/assets/56123042/b2ad75aa-f355-48af-9e8a-460fc1203b9a)
 
-![obraz](https://github.com/mis177/tasks-goonline/assets/56123042/b2ad75aa-f355-48af-9e8a-460fc1203b9a)
+
 
 
 

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:notes_goonline/const/routes.dart';
 import 'package:notes_goonline/pages/stats_page.dart';
 import 'package:notes_goonline/pages/tasks_page.dart';
-
+import 'package:notes_goonline/services/notifications/notifications_service.dart';
 import 'package:notes_goonline/theme/theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationsService.init();
   runApp(const MainApp());
 }
 

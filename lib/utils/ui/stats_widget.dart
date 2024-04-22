@@ -26,7 +26,7 @@ class StatsWidget extends StatelessWidget {
             const Text(
               '"Consistency is what transforms average into excellence"',
               style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.italic,
                   fontSize: 18),
@@ -35,7 +35,7 @@ class StatsWidget extends StatelessWidget {
             const SizedBox(height: 30),
             Container(
               decoration: BoxDecoration(
-                color: Colors.amber,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.all(12),
@@ -61,7 +61,7 @@ class StatsWidget extends StatelessWidget {
             const SizedBox(height: 30),
             Container(
               decoration: BoxDecoration(
-                color: Colors.amber,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.all(12),
@@ -73,12 +73,13 @@ class StatsWidget extends StatelessWidget {
                       fontSize: 26,
                     ),
                   ),
-                  Text("Tasks done: ${stats.tasksDoneToday}",
+                  Text("Tasks done past week: ${stats.tasksDoneToday}",
                       style: const TextStyle(fontSize: 18)),
                   Text(
-                      "Tasks executing this week: ${stats.tasksInExecutionToday}",
+                      "Tasks executing for this week: ${stats.tasksInExecutionWeekly}",
                       style: const TextStyle(fontSize: 18)),
-                  Text("Tasks planned this week: ${stats.tasksInPlanningToday}",
+                  Text(
+                      "Tasks planned for this week: ${stats.tasksInPlanningWeekly}",
                       style: const TextStyle(fontSize: 18)),
                 ],
               ),

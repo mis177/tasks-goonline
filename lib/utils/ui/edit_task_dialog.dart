@@ -255,6 +255,19 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                                     DateTime.now().millisecondsSinceEpoch;
                               }
                               if (isOldTask) {
+                                bool isDeadlineChanged = false;
+                                bool isStatusChanged = false;
+
+                                if (deadlineDate!.millisecondsSinceEpoch !=
+                                    task.deadline) {
+                                  isDeadlineChanged = true;
+                                }
+
+                                if (taskStatusTextController.text !=
+                                        task.status &&
+                                    task.status == taskStatus[2]) {
+                                  isStatusChanged = true;
+                                }
                                 context.read<TaskServiceBloc>().add(
                                       TaskServiceTaskUpdateRequested(
                                         task: Task(
@@ -270,6 +283,8 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                                             owner: taskOwnerTextController.text,
                                             status:
                                                 taskStatusTextController.text),
+                                        isDeadlineChanged: isDeadlineChanged,
+                                        isStatusChanged: isStatusChanged,
                                       ),
                                     );
                               } else {

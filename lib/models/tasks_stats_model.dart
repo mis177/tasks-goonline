@@ -32,7 +32,8 @@ class TasksStats {
     final DateTime todayMidnight =
         DateTime(now.year, now.month, now.day, 24, 59);
 
-    final weekAgo = now.add(const Duration(days: 7));
+    final weekAgo = now.subtract(const Duration(days: 7));
+    final nextWeek = now.add(const Duration(days: 7));
 
     final int allTasksDone =
         tasks.where((task) => task.status == taskStatus[2]).length;
@@ -60,21 +61,24 @@ class TasksStats {
         .length;
 
     // weekly stats
+    //tasks done past week
     final int tasksDoneWeekly = tasks
         .where((task) =>
             task.doneDate! > weekAgo.millisecondsSinceEpoch &&
             task.status == taskStatus[2])
         .length;
+    //tasks planned for next week
     final int tasksInExecutionWeekly = tasks
         .where((task) =>
-            task.deadline > weekAgo.millisecondsSinceEpoch &&
-            task.deadline < todayMidnight.millisecondsSinceEpoch &&
+            task.deadline < nextWeek.millisecondsSinceEpoch &&
+            task.deadline > today.millisecondsSinceEpoch &&
             task.status == taskStatus[1])
         .length;
+
     final int tasksInPlanningWeekly = tasks
         .where((task) =>
-            task.deadline > weekAgo.millisecondsSinceEpoch &&
-            task.deadline < todayMidnight.millisecondsSinceEpoch &&
+            task.deadline < nextWeek.millisecondsSinceEpoch &&
+            task.deadline > today.millisecondsSinceEpoch &&
             task.status == taskStatus[0])
         .length;
 

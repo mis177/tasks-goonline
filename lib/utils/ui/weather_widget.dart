@@ -16,7 +16,7 @@ class WeatherWidget extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               '${weather.temperature}°C',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ],
         ),

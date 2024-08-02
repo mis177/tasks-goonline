@@ -5,9 +5,10 @@ import 'package:notes_goonline/services/database/repositories/task_repository.da
 class TaskDatabaseRepository implements TaskRepository {
   final TaskDatabase database = TaskDatabase();
 
-  static final TaskDatabaseRepository _instance =
-      TaskDatabaseRepository._internal();
   TaskDatabaseRepository._internal();
+
+  static final TaskDatabaseRepository _instance = TaskDatabaseRepository._internal();
+
   factory TaskDatabaseRepository() => _instance;
 
   @override

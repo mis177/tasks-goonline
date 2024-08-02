@@ -55,7 +55,7 @@ class _StatsPageState extends State<StatsPage> {
             context.read<TaskServiceBloc>().add(
                   TaskServiceStatsRequested(tasks: state.tasks),
                 );
-          } else if (state is TripServiceStatsLoaded) {
+          } else if (state is TaskServiceStatsLoaded) {
             return StatsWidget(stats: state.tasksStats);
           }
 

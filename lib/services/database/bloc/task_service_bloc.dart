@@ -148,7 +148,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TripServiceStatsLoaded(
+        emit(TaskServiceStatsLoaded(
           tasksStats: tasksStats,
           exception: exception,
         ));

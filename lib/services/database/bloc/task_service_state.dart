@@ -26,10 +26,10 @@ class TaskServiceTasksLoaded extends TaskServiceState {
   List<Object?> get props => [tasks];
 }
 
-class TripServiceStatsLoaded extends TaskServiceState {
+class TaskServiceStatsLoaded extends TaskServiceState {
   final TasksStats tasksStats;
 
-  const TripServiceStatsLoaded({required this.tasksStats, required super.exception});
+  const TaskServiceStatsLoaded({required this.tasksStats, required super.exception});
 
   @override
   List<Object?> get props => [tasksStats];

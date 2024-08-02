@@ -95,17 +95,90 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
           ),
         ),
         actions: [
-          _buildDialogActions(
-            context,
-            isOldTask: isOldTask,
-            task: task,
-            deadlineDate: deadlineDate,
-            taskNameController: taskNameController,
-            taskDescriptionController: taskDescriptionController,
-            taskPriorityController: taskPriorityController,
-            taskStatusController: taskStatusController,
-            taskOwnerController: taskOwnerController,
-          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (isOldTask)
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () async {
+                      final shouldDelete = await showConfirmationDialog(
+                        context: context,
+                        title: 'Delete Task',
+                        content: 'Are you sure you want to delete this task?',
+                      );
+                      if (shouldDelete == true && context.mounted) {
+                        context.read<TaskServiceBloc>().add(
+                              TaskServiceTaskDeleteRequested(task: task),
+                            );
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (deadlineDate != null) {
+                          final taskPriority = int.tryParse(taskPriorityController.text) ?? 5;
+                          final doneDate =
+                              taskStatusController.text == taskStatus[2] ? DateTime.now().millisecondsSinceEpoch : 0;
+
+                          if (isOldTask) {
+                            final isDeadlineChanged = deadlineDate!.millisecondsSinceEpoch != task.deadline;
+                            final isStatusChanged =
+                                taskStatusController.text != task.status && task.status == taskStatus[2];
+
+                            context.read<TaskServiceBloc>().add(
+                                  TaskServiceTaskUpdateRequested(
+                                    task: Task(
+                                      id: task.id,
+                                      name: taskNameController.text,
+                                      description: taskDescriptionController.text,
+                                      deadline: deadlineDate!.millisecondsSinceEpoch,
+                                      doneDate: doneDate,
+                                      priority: taskPriority,
+                                      owner: taskOwnerController.text,
+                                      status: taskStatusController.text,
+                                    ),
+                                    isDeadlineChanged: isDeadlineChanged,
+                                    isStatusChanged: isStatusChanged,
+                                  ),
+                                );
+                          } else {
+                            context.read<TaskServiceBloc>().add(
+                                  TaskServiceTaskAddRequested(
+                                    task: Task(
+                                      id: DateTime.now().millisecondsSinceEpoch,
+                                      name: taskNameController.text,
+                                      description: taskDescriptionController.text,
+                                      deadline: deadlineDate!.millisecondsSinceEpoch,
+                                      doneDate: doneDate,
+                                      priority: taskPriority,
+                                      owner: taskOwnerController.text,
+                                      status: taskStatusController.text,
+                                    ),
+                                  ),
+                                );
+                          }
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text('OK', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
         ],
       ),
     ),
@@ -212,102 +285,6 @@ Widget _buildDropdown(
           controller.text = value;
         }
       },
-    ),
-  );
-}
-
-Widget _buildDialogActions(
-  BuildContext context, {
-  required bool isOldTask,
-  required Task? task,
-  required DateTime? deadlineDate,
-  required TextEditingController taskNameController,
-  required TextEditingController taskDescriptionController,
-  required TextEditingController taskPriorityController,
-  required TextEditingController taskStatusController,
-  required TextEditingController taskOwnerController,
-}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        if (isOldTask)
-          IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
-            onPressed: () async {
-              final shouldDelete = await showConfirmationDialog(
-                context: context,
-                title: 'Delete Task',
-                content: 'Are you sure you want to delete this task?',
-              );
-              if (shouldDelete == true && context.mounted) {
-                context.read<TaskServiceBloc>().add(
-                      TaskServiceTaskDeleteRequested(task: task!),
-                    );
-                Navigator.of(context).pop();
-              }
-            },
-          ),
-        Row(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (deadlineDate != null) {
-                  final taskPriority = int.tryParse(taskPriorityController.text) ?? 5;
-                  final doneDate =
-                      taskStatusController.text == taskStatus[2] ? DateTime.now().millisecondsSinceEpoch : 0;
-
-                  if (isOldTask) {
-                    final isDeadlineChanged = deadlineDate.millisecondsSinceEpoch != task!.deadline;
-                    final isStatusChanged = taskStatusController.text != task.status && task.status == taskStatus[2];
-
-                    context.read<TaskServiceBloc>().add(
-                          TaskServiceTaskUpdateRequested(
-                            task: Task(
-                              id: task.id,
-                              name: taskNameController.text,
-                              description: taskDescriptionController.text,
-                              deadline: deadlineDate.millisecondsSinceEpoch,
-                              doneDate: doneDate,
-                              priority: taskPriority,
-                              owner: taskOwnerController.text,
-                              status: taskStatusController.text,
-                            ),
-                            isDeadlineChanged: isDeadlineChanged,
-                            isStatusChanged: isStatusChanged,
-                          ),
-                        );
-                  } else {
-                    context.read<TaskServiceBloc>().add(
-                          TaskServiceTaskAddRequested(
-                            task: Task(
-                              id: DateTime.now().millisecondsSinceEpoch,
-                              name: taskNameController.text,
-                              description: taskDescriptionController.text,
-                              deadline: deadlineDate.millisecondsSinceEpoch,
-                              doneDate: doneDate,
-                              priority: taskPriority,
-                              owner: taskOwnerController.text,
-                              status: taskStatusController.text,
-                            ),
-                          ),
-                        );
-                  }
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('OK', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            ),
-          ],
-        ),
-      ],
     ),
   );
 }

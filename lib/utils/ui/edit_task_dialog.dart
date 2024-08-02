@@ -12,319 +12,302 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
   bool isOldTask = task != null;
   DateTime? deadlineDate;
 
-  TextEditingController taskNameTextController = TextEditingController();
-  taskNameTextController.text = isOldTask ? task.name : "";
-  TextEditingController taskDescriptionTextController = TextEditingController();
-  taskDescriptionTextController.text = isOldTask ? task.description : "";
-
-  TextEditingController taskDeadlineTextController = TextEditingController();
-  taskDeadlineTextController.text = isOldTask
-      ? DateFormat('yyyy-MM-dd')
-          .format(DateTime.fromMillisecondsSinceEpoch(task.deadline))
-          .toString()
-      : "";
-
-  TextEditingController taskPriorityTextController = TextEditingController();
-  taskPriorityTextController.text = isOldTask ? task.priority.toString() : "5";
-
-  TextEditingController taskStatusTextController = TextEditingController();
-  taskStatusTextController.text =
-      isOldTask ? task.status.toString() : taskStatus[0];
-
-  TextEditingController taskOwnerTextController = TextEditingController();
-  taskOwnerTextController.text = isOldTask ? task.owner : "";
+  final TextEditingController taskNameController = TextEditingController(
+    text: isOldTask ? task.name : "",
+  );
+  final TextEditingController taskDescriptionController = TextEditingController(
+    text: isOldTask ? task.description : "",
+  );
+  final TextEditingController taskDeadlineController = TextEditingController(
+    text: isOldTask ? DateFormat('yyyy-MM-dd').format(DateTime.fromMillisecondsSinceEpoch(task.deadline)) : "",
+  );
+  final TextEditingController taskPriorityController = TextEditingController(
+    text: isOldTask ? task.priority.toString() : "5",
+  );
+  final TextEditingController taskStatusController = TextEditingController(
+    text: isOldTask ? task.status : taskStatus[0],
+  );
+  final TextEditingController taskOwnerController = TextEditingController(
+    text: isOldTask ? task.owner : "",
+  );
 
   showDialog(
-      context: context,
-      builder: (_) => BlocProvider.value(
-            value: BlocProvider.of<TaskServiceBloc>(context),
-            child: AlertDialog(
-              backgroundColor: Theme.of(context).colorScheme.background,
-              title: Center(
-                child: Text(
-                  isOldTask ? "Edit task" : "New task",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+    context: context,
+    builder: (_) => BlocProvider.value(
+      value: BlocProvider.of<TaskServiceBloc>(context),
+      child: AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Center(
+          child: Text(
+            isOldTask ? "Edit Task" : "New Task",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTextFormField(
+                context,
+                controller: taskNameController,
+                label: "Task Name",
+                icon: Icons.title,
               ),
-              icon: Icon(
-                Icons.note,
-                color: Theme.of(context).colorScheme.primary,
+              _buildTextFormField(
+                context,
+                controller: taskDescriptionController,
+                label: "Task Description",
+                icon: Icons.description,
               ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Task name",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    TextField(
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                      controller: taskNameTextController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.secondary,
-                        prefixIcon: const Icon(Icons.title),
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                        hintText: "Name",
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text("Task description",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    TextField(
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                      controller: taskDescriptionTextController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.secondary,
-                        prefixIcon: const Icon(Icons.draw),
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                        hintText: "Description",
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text("Task deadline",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all()),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Flexible(
-                              child: TextField(
-                                style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                                controller: taskDeadlineTextController,
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor:
-                                        Theme.of(context).colorScheme.secondary,
-                                    border: InputBorder.none),
-                                textAlign: TextAlign.center,
-                                enabled: false,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                deadlineDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: task?.deadline == null
-                                        ? DateTime.now()
-                                        : DateTime.fromMillisecondsSinceEpoch(
-                                            task!.deadline),
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime.now()
-                                        .add(const Duration(days: 365)));
-
-                                if (context.mounted && deadlineDate != null) {
-                                  taskDeadlineTextController.text =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(deadlineDate!)
-                                          .toString();
-                                }
-                              },
-                              icon: const Icon(Icons.calendar_month),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text("Task priority",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    DropdownMenu(
-                        textStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
-                        inputDecorationTheme: InputDecorationTheme(
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.secondary,
-                            border: const OutlineInputBorder()),
-                        controller: taskPriorityTextController,
-                        hintText: "Priority",
-                        initialSelection: taskPriorityTextController.text,
-                        dropdownMenuEntries: taskPriority
-                            .map((e) => DropdownMenuEntry<int>(
-                                value: e, label: e.toString()))
-                            .toList()),
-                    const SizedBox(height: 12),
-                    const Text("Task status",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const SizedBox(height: 4),
-                    DropdownMenu(
-                        textStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
-                        inputDecorationTheme: InputDecorationTheme(
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.secondary,
-                            border: const OutlineInputBorder()),
-                        controller: taskStatusTextController,
-                        hintText: "Status",
-                        initialSelection: taskStatusTextController.text,
-                        dropdownMenuEntries: taskStatus
-                            .map((e) => DropdownMenuEntry<String>(
-                                value: e, label: e.toString()))
-                            .toList()),
-                    const SizedBox(height: 12),
-                    const Text("Task owner",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    TextField(
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                      controller: taskOwnerTextController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.secondary,
-                        prefixIcon: const Icon(Icons.person),
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                        label: const Text("Owner"),
-                      ),
-                    )
-                  ],
-                ),
+              _buildDatePicker(
+                context,
+                controller: taskDeadlineController,
+                initialDate: isOldTask ? DateTime.fromMillisecondsSinceEpoch(task.deadline) : DateTime.now(),
+                onDateSelected: (date) {
+                  deadlineDate = date;
+                  taskDeadlineController.text = DateFormat('yyyy-MM-dd').format(date);
+                },
               ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () async {
-                          if (task != null) {
-                            bool? shouldDelete = await showConfirmationDialog(
-                                context: context,
-                                title: 'Delete task',
-                                content: 'Do you want to delete this task?');
+              _buildDropdown(
+                context,
+                controller: taskPriorityController,
+                items: taskPriority,
+                hintText: "Select Priority",
+              ),
+              _buildDropdown(
+                context,
+                controller: taskStatusController,
+                items: taskStatus,
+                hintText: "Select Status",
+              ),
+              _buildTextFormField(
+                context,
+                controller: taskOwnerController,
+                label: "Task Owner",
+                icon: Icons.person,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          _buildDialogActions(
+            context,
+            isOldTask: isOldTask,
+            task: task,
+            deadlineDate: deadlineDate,
+            taskNameController: taskNameController,
+            taskDescriptionController: taskDescriptionController,
+            taskPriorityController: taskPriorityController,
+            taskStatusController: taskStatusController,
+            taskOwnerController: taskOwnerController,
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
-                            if (shouldDelete == true && context.mounted) {
-                              context.read<TaskServiceBloc>().add(
-                                  TaskServiceTaskDeleteRequested(task: task));
-                              Navigator.of(context).pop();
-                            }
-                          }
-                        },
-                        icon: const Icon(Icons.delete)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'CANCEL',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            if (deadlineDate == null && isOldTask) {
-                              deadlineDate =
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      task.deadline);
-                            }
-                            if (deadlineDate != null) {
-                              int? taskPriority =
-                                  int.tryParse(taskPriorityTextController.text);
-                              taskPriority ??= 5;
-                              int doneDate = 0;
-                              if (taskStatusTextController.text ==
-                                  taskStatus[2]) {
-                                doneDate =
-                                    DateTime.now().millisecondsSinceEpoch;
-                              }
-                              if (isOldTask) {
-                                bool isDeadlineChanged = false;
-                                bool isStatusChanged = false;
+Widget _buildTextFormField(
+  BuildContext context, {
+  required TextEditingController controller,
+  required String label,
+  required IconData icon,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12.0),
+    child: TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.secondary,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.primary,
+      ),
+    ),
+  );
+}
 
-                                if (deadlineDate!.millisecondsSinceEpoch !=
-                                    task.deadline) {
-                                  isDeadlineChanged = true;
-                                }
-
-                                if (taskStatusTextController.text !=
-                                        task.status &&
-                                    task.status == taskStatus[2]) {
-                                  isStatusChanged = true;
-                                }
-                                context.read<TaskServiceBloc>().add(
-                                      TaskServiceTaskUpdateRequested(
-                                        task: Task(
-                                            id: task.id,
-                                            name: taskNameTextController.text,
-                                            description:
-                                                taskDescriptionTextController
-                                                    .text,
-                                            deadline: deadlineDate!
-                                                .millisecondsSinceEpoch,
-                                            doneDate: doneDate,
-                                            priority: taskPriority,
-                                            owner: taskOwnerTextController.text,
-                                            status:
-                                                taskStatusTextController.text),
-                                        isDeadlineChanged: isDeadlineChanged,
-                                        isStatusChanged: isStatusChanged,
-                                      ),
-                                    );
-                              } else {
-                                context.read<TaskServiceBloc>().add(
-                                      TaskServiceTaskAddRequested(
-                                        task: Task(
-                                            id: DateTime.now()
-                                                .millisecondsSinceEpoch,
-                                            name: taskNameTextController.text,
-                                            description:
-                                                taskDescriptionTextController
-                                                    .text,
-                                            deadline: deadlineDate!
-                                                .millisecondsSinceEpoch,
-                                            doneDate: 0,
-                                            priority: taskPriority,
-                                            owner: taskOwnerTextController.text,
-                                            status:
-                                                taskStatusTextController.text),
-                                      ),
-                                    );
-                              }
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: Text(
-                            'OK',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+Widget _buildDatePicker(
+  BuildContext context, {
+  required TextEditingController controller,
+  required DateTime initialDate,
+  required void Function(DateTime) onDateSelected,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12.0),
+    child: Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: "Task Deadline",
+              prefixIcon: const Icon(Icons.calendar_today),
+              filled: true,
+              fillColor: Theme.of(context).colorScheme.secondary,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-          ));
+            enabled: false,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.calendar_today),
+          onPressed: () async {
+            final selectedDate = await showDatePicker(
+              context: context,
+              initialDate: initialDate,
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(days: 365)),
+            );
+            if (selectedDate != null) {
+              onDateSelected(selectedDate);
+            }
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildDropdown(
+  BuildContext context, {
+  required TextEditingController controller,
+  required List<dynamic> items,
+  required String hintText,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12.0),
+    child: DropdownButtonFormField<String>(
+      value: controller.text.isEmpty ? null : controller.text,
+      decoration: InputDecoration(
+        hintText: hintText,
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.secondary,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      items: items
+          .map((item) => DropdownMenuItem<String>(
+                value: item.toString(),
+                child: Text(item.toString()),
+              ))
+          .toList(),
+      onChanged: (value) {
+        if (value != null) {
+          controller.text = value;
+        }
+      },
+    ),
+  );
+}
+
+Widget _buildDialogActions(
+  BuildContext context, {
+  required bool isOldTask,
+  required Task? task,
+  required DateTime? deadlineDate,
+  required TextEditingController taskNameController,
+  required TextEditingController taskDescriptionController,
+  required TextEditingController taskPriorityController,
+  required TextEditingController taskStatusController,
+  required TextEditingController taskOwnerController,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        if (isOldTask)
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () async {
+              final shouldDelete = await showConfirmationDialog(
+                context: context,
+                title: 'Delete Task',
+                content: 'Are you sure you want to delete this task?',
+              );
+              if (shouldDelete == true && context.mounted) {
+                context.read<TaskServiceBloc>().add(
+                      TaskServiceTaskDeleteRequested(task: task!),
+                    );
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        Row(
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (deadlineDate != null) {
+                  final taskPriority = int.tryParse(taskPriorityController.text) ?? 5;
+                  final doneDate =
+                      taskStatusController.text == taskStatus[2] ? DateTime.now().millisecondsSinceEpoch : 0;
+
+                  if (isOldTask) {
+                    final isDeadlineChanged = deadlineDate.millisecondsSinceEpoch != task!.deadline;
+                    final isStatusChanged = taskStatusController.text != task.status && task.status == taskStatus[2];
+
+                    context.read<TaskServiceBloc>().add(
+                          TaskServiceTaskUpdateRequested(
+                            task: Task(
+                              id: task.id,
+                              name: taskNameController.text,
+                              description: taskDescriptionController.text,
+                              deadline: deadlineDate.millisecondsSinceEpoch,
+                              doneDate: doneDate,
+                              priority: taskPriority,
+                              owner: taskOwnerController.text,
+                              status: taskStatusController.text,
+                            ),
+                            isDeadlineChanged: isDeadlineChanged,
+                            isStatusChanged: isStatusChanged,
+                          ),
+                        );
+                  } else {
+                    context.read<TaskServiceBloc>().add(
+                          TaskServiceTaskAddRequested(
+                            task: Task(
+                              id: DateTime.now().millisecondsSinceEpoch,
+                              name: taskNameController.text,
+                              description: taskDescriptionController.text,
+                              deadline: deadlineDate.millisecondsSinceEpoch,
+                              doneDate: doneDate,
+                              priority: taskPriority,
+                              owner: taskOwnerController.text,
+                              status: taskStatusController.text,
+                            ),
+                          ),
+                        );
+                  }
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('OK', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }

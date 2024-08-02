@@ -23,9 +23,7 @@ class TaskServiceTaskUpdateRequested extends TaskServiceEvent {
   final bool isStatusChanged;
 
   const TaskServiceTaskUpdateRequested(
-      {required this.task,
-      required this.isDeadlineChanged,
-      required this.isStatusChanged});
+      {required this.task, required this.isDeadlineChanged, required this.isStatusChanged});
   @override
   List<Object?> get props => [task];
 }
@@ -40,13 +38,11 @@ class TaskServiceTaskDeleteRequested extends TaskServiceEvent {
 
 class TaskServiceTaskSortRequested extends TaskServiceEvent {
   final String columnName;
-  final String? expectedValue;
   final bool isAscending;
 
   const TaskServiceTaskSortRequested({
     required this.columnName,
     required this.isAscending,
-    required this.expectedValue,
   });
   @override
   List<Object?> get props => [columnName];

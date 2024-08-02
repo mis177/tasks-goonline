@@ -12,80 +12,95 @@ class StatsWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 30),
             const Text(
               "All time tasks done:",
-              style: TextStyle(fontSize: 28),
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             Text(
               '${stats.allTasksDone}/${stats.allTasks}',
-              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 12),
             const Text(
               '"Consistency is what transforms average into excellence"',
               style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 18),
+                fontSize: 18,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  const Text(
-                    "Daily statistics:",
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
-                  ),
-                  Text("Tasks done: ${stats.tasksDoneToday}",
-                      style: const TextStyle(fontSize: 18)),
-                  Text(
-                      "Tasks executing until today: ${stats.tasksInExecutionToday}",
-                      style: const TextStyle(fontSize: 18)),
-                  Text(
-                      "Tasks planned until today: ${stats.tasksInPlanningToday}",
-                      style: const TextStyle(fontSize: 18)),
-                ],
-              ),
+            _buildStatsCard(
+              context,
+              title: "Daily statistics:",
+              stats: [
+                "Tasks done: ${stats.tasksDoneToday}",
+                "Tasks executing until today: ${stats.tasksInExecutionToday}",
+                "Tasks planned until today: ${stats.tasksInPlanningToday}",
+              ],
             ),
             const SizedBox(height: 30),
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  const Text(
-                    "Weekly statistics:",
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
-                  ),
-                  Text("Tasks done past week: ${stats.tasksDoneToday}",
-                      style: const TextStyle(fontSize: 18)),
-                  Text(
-                      "Tasks executing for this week: ${stats.tasksInExecutionWeekly}",
-                      style: const TextStyle(fontSize: 18)),
-                  Text(
-                      "Tasks planned for this week: ${stats.tasksInPlanningWeekly}",
-                      style: const TextStyle(fontSize: 18)),
-                ],
-              ),
+            _buildStatsCard(
+              context,
+              title: "Weekly statistics:",
+              stats: [
+                "Tasks done past week: ${stats.tasksDoneWeekly}",
+                "Tasks executing for this week: ${stats.tasksInExecutionWeekly}",
+                "Tasks planned for this week: ${stats.tasksInPlanningWeekly}",
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatsCard(BuildContext context, {required String title, required List<String> stats}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...stats.map((stat) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Text(
+                  stat,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black87,
+                  ),
+                ),
+              )),
+        ],
       ),
     );
   }

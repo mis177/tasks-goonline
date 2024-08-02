@@ -110,6 +110,16 @@ class _TasksListPageState extends State<TasksListPage> {
                     ),
                   );
                 } else if (state is WeatherLoaded) {
+                  if (state.weather == null) {
+                    return const Column(
+                      children: [
+                        SizedBox(height: 16),
+                        Text("Could not get current weather", style: TextStyle(fontSize: 20, color: Colors.red)),
+                        SizedBox(height: 8),
+                        Text("Please check your internet connection", style: TextStyle(fontSize: 16, color: Colors.red))
+                      ],
+                    );
+                  }
                   return WeatherWidget(weather: state.weather!);
                 }
 

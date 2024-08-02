@@ -4,15 +4,16 @@ import 'package:notes_goonline/const/database_const.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_bloc.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_event.dart';
 
-class ManuOption {
-  String columnName;
-  bool? clicked;
+class SortOption {
+  final String columnName;
+  bool clicked;
   bool? isAscending;
 
-  ManuOption(
-      {required this.columnName,
-      required this.clicked,
-      required this.isAscending});
+  SortOption({
+    required this.columnName,
+    this.clicked = false,
+    this.isAscending,
+  });
 }
 
 class SortMenu extends StatefulWidget {
@@ -25,81 +26,81 @@ class SortMenu extends StatefulWidget {
 }
 
 class _SortMenuState extends State<SortMenu> {
-  List<ManuOption> sortOptions = [
-    ManuOption(columnName: nameColumn, clicked: false, isAscending: null),
-    ManuOption(
-        columnName: descriptionColumn, clicked: false, isAscending: null),
-    ManuOption(columnName: deadlineColumn, clicked: false, isAscending: null),
-    ManuOption(columnName: priorityColumn, clicked: false, isAscending: null),
-  ];
+  late List<SortOption> sortOptions;
 
-  // {
-  //   nameColumn: false,
-  //   descriptionColumn: false,
-  //   deadlineColumn: false,
-  //   priorityColumn: false
-  // };
+  @override
+  void initState() {
+    super.initState();
+    sortOptions = [
+      SortOption(columnName: nameColumn),
+      SortOption(columnName: descriptionColumn),
+      SortOption(columnName: deadlineColumn),
+      SortOption(columnName: priorityColumn),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-        value: BlocProvider.of<TaskServiceBloc>(context),
-        child: PopupMenuButton(
-          itemBuilder: (BuildContext context) =>
-              getSortingOptions(context, widget.blocContext, sortOptions),
-          child: const Icon(Icons.sort),
-        ));
+      value: BlocProvider.of<TaskServiceBloc>(context),
+      child: PopupMenuButton<int>(
+        itemBuilder: (context) => _buildSortOptions(context),
+        child: const Icon(Icons.sort, size: 28),
+      ),
+    );
   }
-}
 
-List<PopupMenuItem<Widget>> getSortingOptions(BuildContext context,
-    BuildContext blocContext, List<ManuOption> sortOptions) {
-  List<PopupMenuItem<Widget>> optionsList = [];
+  List<PopupMenuEntry<int>> _buildSortOptions(BuildContext context) {
+    return sortOptions.map((option) {
+      final sortIcon = option.isAscending == true
+          ? const Icon(Icons.arrow_upward, color: Colors.black54)
+          : const Icon(Icons.arrow_downward, color: Colors.black54);
 
-  for (var option in sortOptions) {
-    Icon sortIcon = option.isAscending == true
-        ? const Icon(Icons.north)
-        : const Icon(Icons.south);
-
-    optionsList.add(PopupMenuItem(
-      child: GestureDetector(
+      return PopupMenuItem<int>(
+        value: sortOptions.indexOf(option),
         child: Container(
-          color: (option.clicked == true
-              ? Theme.of(context).colorScheme.secondary
-              : Colors.transparent),
-          child: Row(
-            children: [
-              Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: [Text(option.columnName), sortIcon],
-                  )),
-            ],
+          decoration: BoxDecoration(
+            color: option.clicked ? Theme.of(context).colorScheme.secondary.withOpacity(0.1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            leading: sortIcon,
+            title: Text(
+              option.columnName,
+              style: TextStyle(
+                fontWeight: option.clicked ? FontWeight.bold : FontWeight.normal,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            onTap: () {
+              _onSortOptionSelected(option);
+            },
           ),
         ),
-        onTap: () {
-          for (var element in sortOptions) {
-            if (option != element) {
-              element.clicked = false;
-              element.isAscending = null;
-            }
-          }
-          option.clicked = true;
-          if (option.isAscending == null || option.isAscending == false) {
-            option.isAscending = true;
-          } else if (option.isAscending == true) {
-            option.isAscending = false;
-          }
-
-          blocContext.read<TaskServiceBloc>().add(TaskServiceTaskSortRequested(
-                columnName: option.columnName,
-                isAscending: option.isAscending!,
-                expectedValue: null,
-              ));
-          Navigator.of(context).pop();
-        },
-      ),
-    ));
+      );
+    }).toList();
   }
 
-  return optionsList;
+  void _onSortOptionSelected(SortOption selectedOption) {
+    setState(() {
+      for (var option in sortOptions) {
+        if (option != selectedOption) {
+          option.clicked = false;
+          option.isAscending = null;
+        }
+      }
+      selectedOption.clicked = true;
+      selectedOption.isAscending = selectedOption.isAscending == null || !selectedOption.isAscending!;
+    });
+
+    widget.blocContext.read<TaskServiceBloc>().add(
+          TaskServiceTaskSortRequested(
+            columnName: selectedOption.columnName,
+            isAscending: selectedOption.isAscending!,
+          ),
+        );
+
+    Navigator.of(context).pop();
+  }
 }

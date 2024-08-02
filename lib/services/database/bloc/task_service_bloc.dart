@@ -22,7 +22,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTasksLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -53,7 +53,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTasksLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -100,7 +100,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTasksLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -118,7 +118,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTasksLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -133,7 +133,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTasksLoaded(tasks: tasks, exception: exception));
       },
     );
 

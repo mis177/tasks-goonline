@@ -51,7 +51,7 @@ class _StatsPageState extends State<StatsPage> {
             context.read<TaskServiceBloc>().add(
                   TaskServiceLoadTasksRequested(),
                 );
-          } else if (state is TaskServiceTripsLoaded) {
+          } else if (state is TaskServiceTasksLoaded) {
             context.read<TaskServiceBloc>().add(
                   TaskServiceStatsRequested(tasks: state.tasks),
                 );

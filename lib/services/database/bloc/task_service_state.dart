@@ -17,10 +17,10 @@ class TaskServiceLoading extends TaskServiceState {
   const TaskServiceLoading();
 }
 
-class TaskServiceTripsLoaded extends TaskServiceState {
+class TaskServiceTasksLoaded extends TaskServiceState {
   final List<Task> tasks;
 
-  const TaskServiceTripsLoaded({required this.tasks, required super.exception});
+  const TaskServiceTasksLoaded({required this.tasks, required super.exception});
 
   @override
   List<Object?> get props => [tasks];

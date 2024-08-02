@@ -71,7 +71,7 @@ class _TasksListPageState extends State<TasksListPage> {
         ],
         title: const Text("TASKS LIST"),
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: const CustomDrawer(),
       // pull screen to refresh weather
       body: RefreshIndicator(
@@ -134,7 +134,7 @@ class _TasksListPageState extends State<TasksListPage> {
                     context.read<TaskServiceBloc>().add(
                           TaskServiceLoadTasksRequested(),
                         );
-                  } else if (state is TaskServiceTripsLoaded) {
+                  } else if (state is TaskServiceTasksLoaded) {
                     return Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(

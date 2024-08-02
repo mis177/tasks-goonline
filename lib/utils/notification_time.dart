@@ -5,36 +5,17 @@ TZDateTime? computeNotificationTime({
   required Task task,
   required Duration timeBeforeDeadline,
 }) {
+  // Pobierz bieżący czas w lokalnej strefie czasowej
   TZDateTime nowTZDate = TZDateTime.now(local);
 
-  DateTime nowDate = DateTime.now();
+  // Oblicz czas powiadomienia na podstawie terminu zadania i czasu przed terminem
+  TZDateTime deadlineDateTime = TZDateTime.fromMillisecondsSinceEpoch(local, task.deadline);
+  TZDateTime notificationDateTime = deadlineDateTime.subtract(timeBeforeDeadline);
 
-  // local TZDateTime and DateTime difference correction
-  Duration difference = nowDate.difference(DateTime(nowTZDate.year,
-      nowTZDate.month, nowTZDate.day, nowTZDate.hour, nowTZDate.minute));
-
-  DateTime notificationDateTime =
-      DateTime.fromMillisecondsSinceEpoch(task.deadline)
-          .subtract(timeBeforeDeadline);
-
-  DateTime correctedNotificationDateTime =
-      notificationDateTime.subtract(difference);
-
-  bool isAfterNotificationTime =
-      notificationDateTime.difference(nowDate).inMilliseconds > 0;
-  TZDateTime? notificationTime;
-  if (isAfterNotificationTime) {
-    notificationTime = TZDateTime(
-      local,
-      correctedNotificationDateTime.year,
-      correctedNotificationDateTime.month,
-      correctedNotificationDateTime.day,
-      correctedNotificationDateTime.hour,
-      correctedNotificationDateTime.minute,
-    );
+  // Sprawdź, czy czas powiadomienia jest w przyszłości
+  if (notificationDateTime.isAfter(nowTZDate)) {
+    return notificationDateTime;
   } else {
-    notificationTime = null;
+    return null;
   }
-
-  return notificationTime;
 }

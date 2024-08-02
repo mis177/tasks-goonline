@@ -127,11 +127,13 @@ void showEditNoteDialog({required BuildContext context, Task? task}) {
                     ),
                     TextButton(
                       onPressed: () {
+                        if (deadlineDate == null && isOldTask) {
+                          deadlineDate = DateTime.fromMillisecondsSinceEpoch(task.deadline);
+                        }
                         if (deadlineDate != null) {
                           final taskPriority = int.tryParse(taskPriorityController.text) ?? 5;
                           final doneDate =
                               taskStatusController.text == taskStatus[2] ? DateTime.now().millisecondsSinceEpoch : 0;
-
                           if (isOldTask) {
                             final isDeadlineChanged = deadlineDate!.millisecondsSinceEpoch != task.deadline;
                             final isStatusChanged =

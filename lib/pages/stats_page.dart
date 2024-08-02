@@ -15,8 +15,7 @@ class StatsPageProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          TaskServiceBloc(TaskService(repository: TaskDatabaseRepository())),
+      create: (context) => TaskServiceBloc(TaskService(repository: TaskDatabaseRepository())),
       child: const StatsPage(),
     );
   }
@@ -44,9 +43,7 @@ class _StatsPageState extends State<StatsPage> {
         listener: (context, state) async {
           if (state.exception != null) {
             await showErrorDialog(
-                context: context,
-                content:
-                    "Database Error! \n\nYour request could not be processed!");
+                context: context, content: "Database Error! \n\nYour request could not be processed!");
           }
         },
         builder: (context, state) {
@@ -54,7 +51,7 @@ class _StatsPageState extends State<StatsPage> {
             context.read<TaskServiceBloc>().add(
                   TaskServiceLoadTasksRequested(),
                 );
-          } else if (state is TripServiceTripsLoaded) {
+          } else if (state is TaskServiceTripsLoaded) {
             context.read<TaskServiceBloc>().add(
                   TaskServiceStatsRequested(tasks: state.tasks),
                 );

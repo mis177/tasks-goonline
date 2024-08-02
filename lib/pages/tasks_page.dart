@@ -24,9 +24,7 @@ class TasksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-            create: (context) => TaskServiceBloc(
-                TaskService(repository: TaskDatabaseRepository()))),
+        BlocProvider(create: (context) => TaskServiceBloc(TaskService(repository: TaskDatabaseRepository()))),
         BlocProvider(create: (context) => WeatherBloc(DioWeatherClient())),
       ],
       child: const TasksListPage(),
@@ -84,17 +82,13 @@ class _TasksListPageState extends State<TasksListPage> {
           children: [
             BlocConsumer<WeatherBloc, WeatherState>(
               listener: (context, state) async {
-                if (state.exception != null &&
-                    state.exception is WeatherPermissionDenied) {
+                if (state.exception != null && state.exception is WeatherPermissionDenied) {
                   await showErrorDialog(
                       context: context,
-                      content:
-                          "Weather API Error! \n\nDenied permissions to access the device's location.");
+                      content: "Weather API Error! \n\nDenied permissions to access the device's location.");
                 } else if (state.exception != null) {
                   await showErrorDialog(
-                      context: context,
-                      content:
-                          "Weather API Error! \n\nYour request could not be processed!");
+                      context: context, content: "Weather API Error! \n\nYour request could not be processed!");
                 }
               },
               builder: (context, state) {
@@ -132,9 +126,7 @@ class _TasksListPageState extends State<TasksListPage> {
                 listener: (context, state) async {
                   if (state.exception != null) {
                     await showErrorDialog(
-                        context: context,
-                        content:
-                            "Database Error! \n\nYour request could not be processed!");
+                        context: context, content: "Database Error! \n\nYour request could not be processed!");
                   }
                 },
                 builder: (context, state) {
@@ -142,7 +134,7 @@ class _TasksListPageState extends State<TasksListPage> {
                     context.read<TaskServiceBloc>().add(
                           TaskServiceLoadTasksRequested(),
                         );
-                  } else if (state is TripServiceTripsLoaded) {
+                  } else if (state is TaskServiceTripsLoaded) {
                     return Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
@@ -152,14 +144,11 @@ class _TasksListPageState extends State<TasksListPage> {
                           Expanded(
                             child: GridView.count(
                                 crossAxisCount: 2,
-                                children:
-                                    List.generate(state.tasks.length, (index) {
+                                children: List.generate(state.tasks.length, (index) {
                                   return TaskTile(
                                       task: state.tasks[index],
                                       onTap: () {
-                                        showEditNoteDialog(
-                                            context: context,
-                                            task: state.tasks[index]);
+                                        showEditNoteDialog(context: context, task: state.tasks[index]);
                                       });
                                 })),
                           ),

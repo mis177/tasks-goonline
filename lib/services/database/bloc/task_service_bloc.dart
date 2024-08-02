@@ -22,7 +22,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TripServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -35,18 +35,15 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
           await service.addTask(event.task);
           // schedule notification to remind user about task 12h before deadline
           // if task has status planned or executing
-          if (event.task.status == taskStatus[0] ||
-              event.task.status == taskStatus[1]) {
-            TZDateTime? notificationTime = computeNotificationTime(
-                task: event.task,
-                timeBeforeDeadline: const Duration(hours: 12));
+          if (event.task.status == taskStatus[0] || event.task.status == taskStatus[1]) {
+            TZDateTime? notificationTime =
+                computeNotificationTime(task: event.task, timeBeforeDeadline: const Duration(hours: 12));
 
             if (notificationTime != null) {
               NotificationsService.scheduledNotification(
                 id: (event.task.id / 1000).floor(),
                 title: event.task.name,
-                body:
-                    '${event.task.owner} - You have 12 hours before deadline!',
+                body: '${event.task.owner} - You have 12 hours before deadline!',
                 notificationTime: notificationTime,
               );
             }
@@ -56,7 +53,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TripServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -69,41 +66,32 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
           await service.updateTask(event.task);
           // set new notification with updated deadline
           // if task has status planned or executing
-          if (event.isDeadlineChanged && event.task.status == taskStatus[0] ||
-              event.task.status == taskStatus[1]) {
-            NotificationsService.cancelNotification(
-                (event.task.id / 1000).floor());
+          if (event.isDeadlineChanged && event.task.status == taskStatus[0] || event.task.status == taskStatus[1]) {
+            NotificationsService.cancelNotification((event.task.id / 1000).floor());
 
-            TZDateTime? notificationTime = computeNotificationTime(
-                task: event.task,
-                timeBeforeDeadline: const Duration(hours: 12));
+            TZDateTime? notificationTime =
+                computeNotificationTime(task: event.task, timeBeforeDeadline: const Duration(hours: 12));
             if (notificationTime != null) {
               NotificationsService.scheduledNotification(
                 id: (event.task.id / 1000).floor(),
                 title: event.task.name,
-                body:
-                    '${event.task.owner} - You have 12 hours before deadline!',
+                body: '${event.task.owner} - You have 12 hours before deadline!',
                 notificationTime: notificationTime,
               );
             }
 
             // task status changed to done, cancelNotification
-          } else if (event.isStatusChanged &&
-              event.task.status == taskStatus[2]) {
-            NotificationsService.cancelNotification(
-                (event.task.id / 1000).floor());
+          } else if (event.isStatusChanged && event.task.status == taskStatus[2]) {
+            NotificationsService.cancelNotification((event.task.id / 1000).floor());
             // status changed from done, schedule notification
-          } else if (event.isStatusChanged &&
-              event.task.status != taskStatus[2]) {
-            TZDateTime? notificationTime = computeNotificationTime(
-                task: event.task,
-                timeBeforeDeadline: const Duration(hours: 12));
+          } else if (event.isStatusChanged && event.task.status != taskStatus[2]) {
+            TZDateTime? notificationTime =
+                computeNotificationTime(task: event.task, timeBeforeDeadline: const Duration(hours: 12));
             if (notificationTime != null) {
               NotificationsService.scheduledNotification(
                 id: (event.task.id / 1000).floor(),
                 title: event.task.name,
-                body:
-                    '${event.task.owner} - You have 12 hours before deadline!',
+                body: '${event.task.owner} - You have 12 hours before deadline!',
                 notificationTime: notificationTime,
               );
             }
@@ -112,7 +100,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TripServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -125,13 +113,12 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         try {
           await service.deleteTask(event.task);
           // cancel task notification
-          NotificationsService.cancelNotification(
-              (event.task.id / 1000).floor());
+          NotificationsService.cancelNotification((event.task.id / 1000).floor());
           tasks = await service.getTasks();
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TripServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
       },
     );
 
@@ -146,7 +133,7 @@ class TaskServiceBloc extends Bloc<TaskServiceEvent, TaskServiceState> {
         } on Exception catch (e) {
           exception = e;
         }
-        emit(TripServiceTripsLoaded(tasks: tasks, exception: exception));
+        emit(TaskServiceTripsLoaded(tasks: tasks, exception: exception));
       },
     );
 

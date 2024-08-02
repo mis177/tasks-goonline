@@ -1,30 +1,29 @@
 import 'package:notes_goonline/models/task_model.dart';
 
 List<Task> sortTasks(List<Task> tasks, String columnName, bool isAscending) {
+  // Określ funkcję porównującą na podstawie kolumny
+  int Function(Task a, Task b) compareFunction;
+
   switch (columnName) {
     case 'name':
-      isAscending == true
-          ? tasks.sort((a, b) => a.name.compareTo(b.name))
-          : tasks.sort((a, b) => b.name.compareTo(a.name));
-
-      return tasks;
+      compareFunction = (a, b) => a.name.compareTo(b.name);
+      break;
     case 'description':
-      isAscending == true
-          ? tasks.sort((a, b) => a.description.compareTo(b.description))
-          : tasks.sort((a, b) => b.description.compareTo(a.description));
-      return tasks;
+      compareFunction = (a, b) => a.description.compareTo(b.description);
+      break;
     case 'deadline':
-      isAscending == true
-          ? tasks.sort((a, b) => a.deadline.compareTo(b.deadline))
-          : tasks.sort((a, b) => b.deadline.compareTo(a.deadline));
-      return tasks;
+      compareFunction = (a, b) => a.deadline.compareTo(b.deadline);
+      break;
     case 'priority':
-      isAscending == true
-          ? tasks.sort((a, b) => a.priority.compareTo(b.priority))
-          : tasks.sort((a, b) => b.priority.compareTo(a.priority));
-
+      compareFunction = (a, b) => a.priority.compareTo(b.priority);
+      break;
+    default:
+      // Obsługuje przypadek, gdy nie podano prawidłowej nazwy kolumny
       return tasks;
   }
+
+  // Sortowanie z uwzględnieniem kierunku
+  tasks.sort(isAscending ? compareFunction : (a, b) => compareFunction(b, a));
 
   return tasks;
 }

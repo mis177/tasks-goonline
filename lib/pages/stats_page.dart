@@ -4,6 +4,7 @@ import 'package:notes_goonline/services/database/bloc/task_service_bloc.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_event.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_state.dart';
 import 'package:notes_goonline/services/database/repositories/task_database_repository.dart';
+import 'package:notes_goonline/services/database/task_database.dart';
 import 'package:notes_goonline/services/database/task_service.dart';
 import 'package:notes_goonline/utils/ui/custom_drawer.dart';
 import 'package:notes_goonline/utils/ui/error_dialog.dart';
@@ -15,7 +16,7 @@ class StatsPageProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TaskServiceBloc(TaskService(repository: TaskDatabaseRepository())),
+      create: (context) => TaskServiceBloc(TaskService(repository: TaskDatabaseRepository(TaskDatabase()))),
       child: const StatsPage(),
     );
   }

@@ -4,6 +4,7 @@ import 'package:notes_goonline/services/database/bloc/task_service_bloc.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_event.dart';
 import 'package:notes_goonline/services/database/bloc/task_service_state.dart';
 import 'package:notes_goonline/services/database/repositories/task_database_repository.dart';
+import 'package:notes_goonline/services/database/task_database.dart';
 import 'package:notes_goonline/services/database/task_service.dart';
 import 'package:notes_goonline/services/weather_api/bloc/weather_bloc.dart';
 import 'package:notes_goonline/services/weather_api/bloc/weather_event.dart';
@@ -24,7 +25,8 @@ class TasksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => TaskServiceBloc(TaskService(repository: TaskDatabaseRepository()))),
+        BlocProvider(
+            create: (context) => TaskServiceBloc(TaskService(repository: TaskDatabaseRepository(TaskDatabase())))),
         BlocProvider(create: (context) => WeatherBloc(DioWeatherClient())),
       ],
       child: const TasksListPage(),

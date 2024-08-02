@@ -3,13 +3,15 @@ import 'package:notes_goonline/services/database/task_database.dart';
 import 'package:notes_goonline/services/database/repositories/task_repository.dart';
 
 class TaskDatabaseRepository implements TaskRepository {
-  final TaskDatabase database = TaskDatabase();
+  final TaskDatabase database;
 
-  TaskDatabaseRepository._internal();
-
-  static final TaskDatabaseRepository _instance = TaskDatabaseRepository._internal();
-
-  factory TaskDatabaseRepository() => _instance;
+  TaskDatabaseRepository._internal(this.database);
+  static TaskDatabaseRepository? _instance;
+  // Factory constructor for singleton access
+  factory TaskDatabaseRepository(TaskDatabase database) {
+    _instance ??= TaskDatabaseRepository._internal(database);
+    return _instance!;
+  }
 
   @override
   Future<List<Task>> getTasks() async {

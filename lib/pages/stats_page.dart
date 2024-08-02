@@ -37,7 +37,7 @@ class _StatsPageState extends State<StatsPage> {
         centerTitle: true,
         title: const Text("TASKS STATS"),
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: const CustomDrawer(),
       body: BlocConsumer<TaskServiceBloc, TaskServiceState>(
         listener: (context, state) async {
